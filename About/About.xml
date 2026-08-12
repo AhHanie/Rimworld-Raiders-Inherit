@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+    <name>Raiders Inherit</name>
+    <author>Sk</author>
+    <packageId>sk.raidersinherit</packageId>
+    <supportedVersions>
+        <li>1.6</li>
+    </supportedVersions>
+    <description>Replaces the vanilla "Man in Black" recovery event with something a bit more fitting: when your colony's last colonist falls to an enemy raid, you inherit the raid itself instead of a lone stranger wandering in. A configurable number of the surviving raiders join your colony immediately; the rest are released as non-hostile allies and leave the map peacefully, so nobody is left behind to turn around and attack your new colonists.</description>
+    <modVersion>1.0.0</modVersion>
+    <url>https://steamcommunity.com/sharedfiles/filedetails/?id=3782411214</url>
+    <modDependencies>
+        <li>
+            <packageId>brrainz.harmony</packageId>
+            <displayName>Harmony</displayName>
+            <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+            <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+        </li>
+    </modDependencies>
+</ModMetaData>

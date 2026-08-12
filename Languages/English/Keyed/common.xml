@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+    <RaidersInherit.LoadingLabel>Raiders Inherit Loading</RaidersInherit.LoadingLabel>
+    <RaidersInherit.SettingsTitle>Raiders Inherit</RaidersInherit.SettingsTitle>
+    <RaidersInherit.InheritEntireRaid.Label>Inherit entire remaining raid</RaidersInherit.InheritEntireRaid.Label>
+    <RaidersInherit.InheritEntireRaid.Tooltip>If enabled, every living raider still on the map joins your colony, instead of only the number set below. No raiders are released as allies in this mode.</RaidersInherit.InheritEntireRaid.Tooltip>
+    <RaidersInherit.RaidersToInherit.Label>Raiders to inherit</RaidersInherit.RaidersToInherit.Label>
+    <RaidersInherit.RaidersToInherit.Tooltip>This many randomly chosen surviving raiders join your colony. The rest are released as non-hostile allies and leave the map peacefully. If the raid has fewer survivors than this, all of them join.</RaidersInherit.RaidersToInherit.Tooltip>
+    <RaidersInherit.UnknownFaction>an unknown faction</RaidersInherit.UnknownFaction>
+    <RaidersInherit.JoinedLetterLabel>New Colonists</RaidersInherit.JoinedLetterLabel>
+    <RaidersInherit.JoinedLetterText>With your colony defeated, {0} of the attacking raiders from {1} have decided to join you instead: {2}.\n\nThe remaining {3} raiders have been released as non-hostile wanderers and are leaving the area. They will not attack your new colonists, but they have not joined your colony either.</RaidersInherit.JoinedLetterText>
+    <RaidersInherit.JoinedLetterTextAllJoined>With your colony defeated, the entire attacking raid from {1} has decided to join you instead: {2}.\n\nNone of the attackers remain hostile.</RaidersInherit.JoinedLetterTextAllJoined>
+</LanguageData>
