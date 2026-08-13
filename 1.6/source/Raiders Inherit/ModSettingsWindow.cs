@@ -22,7 +22,15 @@ namespace Raiders_Inherit
             }
 
             GUI.enabled = !ModSettings.inheritEntireRaid;
-            listing.TextFieldNumericLabeled("RaidersInherit.RaidersToInherit.Label".Translate(), ref ModSettings.raidersToInherit, ref raidersToInheritBuffer, 1f, 999f);
+            string raidersToInheritLabel = "RaidersInherit.RaidersToInherit.Label".Translate();
+            Rect rowRect = listing.GetRect(Text.LineHeight);
+            Rect labelRect = new Rect(rowRect.x, rowRect.y, Text.CalcSize(raidersToInheritLabel).x, rowRect.height);
+            Rect fieldRect = new Rect(labelRect.xMax + 4f, rowRect.y, 100f, rowRect.height);
+            TextAnchor oldAnchor = Text.Anchor;
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Widgets.Label(labelRect, raidersToInheritLabel);
+            Text.Anchor = oldAnchor;
+            Widgets.TextFieldNumeric(fieldRect, ref ModSettings.raidersToInherit, ref raidersToInheritBuffer, 1f, 999f);
             GUI.enabled = true;
 
             listing.Label("RaidersInherit.RaidersToInherit.Tooltip".Translate());
