@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using RimWorld;
 using RimWorld.Planet;
 using Verse;
@@ -28,6 +29,10 @@ namespace Raiders_Inherit
         public void Notify_RaidGenerated(Faction faction, List<Pawn> pawns)
         {
             if (faction == null || pawns == null || pawns.Count == 0)
+            {
+                return;
+            }
+            if (!Rand.Chance(Mathf.Clamp01(ModSettings.inheritanceChance)))
             {
                 return;
             }

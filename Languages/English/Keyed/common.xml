@@ -2,6 +2,8 @@
 <LanguageData>
     <RaidersInherit.LoadingLabel>Raiders Inherit Loading</RaidersInherit.LoadingLabel>
     <RaidersInherit.SettingsTitle>Raiders Inherit</RaidersInherit.SettingsTitle>
+    <RaidersInherit.InheritanceChance.Label>Chance to enable inheritance: {0}</RaidersInherit.InheritanceChance.Label>
+    <RaidersInherit.InheritanceChance.Tooltip>This percentage is rolled once for each generated enemy raid. A successful roll allows Raiders Inherit to take over if that raid defeats your last viable colonist, replacing the vanilla Man in Black rescue with the settings below. An unsuccessful roll leaves that raid alone, so the vanilla rescue remains available if its own normal conditions are met.</RaidersInherit.InheritanceChance.Tooltip>
     <RaidersInherit.InheritEntireRaid.Label>Inherit entire remaining raid</RaidersInherit.InheritEntireRaid.Label>
     <RaidersInherit.InheritEntireRaid.Tooltip>If enabled, every living raider still on the map joins your colony, instead of only the number set below. No raiders are released as allies in this mode.</RaidersInherit.InheritEntireRaid.Tooltip>
     <RaidersInherit.RaidersToInherit.Label>Raiders to inherit</RaidersInherit.RaidersToInherit.Label>

@@ -12,6 +12,14 @@ namespace Raiders_Inherit
             Listing_Standard listing = new Listing_Standard();
             listing.Begin(parent);
 
+            string inheritanceChanceLabel = "RaidersInherit.InheritanceChance.Label".Translate(ModSettings.inheritanceChance.ToStringPercent("0"));
+            TaggedString inheritanceChanceTooltip = "RaidersInherit.InheritanceChance.Tooltip".Translate();
+            Rect sliderRowRect = listing.GetRect(Text.LineHeight * 2f);
+            ModSettings.inheritanceChance = Widgets.HorizontalSlider(sliderRowRect, ModSettings.inheritanceChance, 0f, 1f, middleAlignment: false, inheritanceChanceLabel, "0%", "100%", 0.01f);
+            TooltipHandler.TipRegion(sliderRowRect, inheritanceChanceTooltip);
+
+            listing.Gap();
+
             listing.CheckboxLabeled("RaidersInherit.InheritEntireRaid.Label".Translate(), ref ModSettings.inheritEntireRaid, "RaidersInherit.InheritEntireRaid.Tooltip".Translate());
 
             listing.Gap();
