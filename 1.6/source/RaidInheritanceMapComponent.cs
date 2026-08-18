@@ -44,18 +44,9 @@ namespace Raiders_Inherit
             records.Add(record);
         }
 
-        public void Notify_PotentialDecisiveDefeat(Pawn victim, DamageInfo? dinfo)
+        public void Notify_PotentialColonyDefeat(Pawn victim)
         {
             if (victim == null || !victim.RaceProps.Humanlike || !victim.IsColonist)
-            {
-                return;
-            }
-            if (!dinfo.HasValue || !(dinfo.Value.Instigator is Pawn instigator))
-            {
-                return;
-            }
-            RaidRecord record = records.FirstOrDefault((RaidRecord r) => r.raidPawns.Contains(instigator));
-            if (record == null || record.pending)
             {
                 return;
             }
@@ -63,7 +54,25 @@ namespace Raiders_Inherit
             {
                 return;
             }
+            RaidRecord record = FindMostRecentOngoingRaid();
+            if (record == null)
+            {
+                return;
+            }
             record.pending = true;
+        }
+
+        private RaidRecord FindMostRecentOngoingRaid()
+        {
+            for (int i = records.Count - 1; i >= 0; i--)
+            {
+                RaidRecord record = records[i];
+                if (!record.pending && !IsRaidOver(record))
+                {
+                    return record;
+                }
+            }
+            return null;
         }
 
         public bool HasPendingInheritance()

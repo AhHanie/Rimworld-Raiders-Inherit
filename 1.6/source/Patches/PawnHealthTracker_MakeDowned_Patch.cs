@@ -12,9 +12,9 @@ namespace Raiders_Inherit.Patches
             return AccessTools.Method(typeof(Pawn_HealthTracker), "MakeDowned", new[] { typeof(DamageInfo?), typeof(Hediff) });
         }
 
-        public static void Prefix(DamageInfo? dinfo, Pawn ___pawn)
+        public static void Prefix(Pawn ___pawn)
         {
-            ___pawn.Map?.GetComponent<RaidInheritanceMapComponent>()?.Notify_PotentialDecisiveDefeat(___pawn, dinfo);
+            ___pawn.Map?.GetComponent<RaidInheritanceMapComponent>()?.Notify_PotentialColonyDefeat(___pawn);
         }
     }
 }
