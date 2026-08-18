@@ -180,7 +180,16 @@ namespace Raiders_Inherit
                 }
             }
             SendJoinedLetter(record, joiners, allies);
+            OpenColonyNamingDialog();
             records.Remove(record);
+        }
+
+        private void OpenColonyNamingDialog()
+        {
+            if (map.Parent is Settlement settlement && settlement.Faction == Faction.OfPlayer)
+            {
+                Find.WindowStack.Add(new Dialog_NamePlayerSettlement(settlement));
+            }
         }
 
         private static void SendJoinedLetter(RaidRecord record, List<Pawn> joiners, List<Pawn> allies)
