@@ -163,6 +163,7 @@ namespace Raiders_Inherit
 
         private void PerformHandoff(RaidRecord record, List<Pawn> livePawns)
         {
+            List<Pawn> pawnsToEnslave = GetDownedColonistsToEnslave();
             int joinCount = ModSettings.inheritEntireRaid ? livePawns.Count : System.Math.Min(ModSettings.raidersToInherit, livePawns.Count);
             List<Pawn> shuffled = livePawns.InRandomOrder().ToList();
             List<Pawn> joiners = shuffled.Take(joinCount).ToList();
@@ -171,6 +172,7 @@ namespace Raiders_Inherit
             {
                 pawn.SetFaction(Faction.OfPlayer);
             }
+            List<Pawn> enslaved = EnslaveDownedColonists(pawnsToEnslave);
             if (allies.Count > 0)
             {
                 foreach (Pawn pawn in allies)
@@ -188,9 +190,41 @@ namespace Raiders_Inherit
                     Find.LetterStack.RemoveLetter(gameEndedLetter);
                 }
             }
-            SendJoinedLetter(record, joiners, allies);
+            SendJoinedLetter(record, joiners, allies, enslaved);
             OpenColonyNamingDialog();
             records.Remove(record);
+        }
+
+        private List<Pawn> GetDownedColonistsToEnslave()
+        {
+            if (!ModSettings.enslaveDownedColonistsOnTakeover || !ModsConfig.IdeologyActive)
+            {
+                return new List<Pawn>();
+            }
+            List<Pawn> result = new List<Pawn>();
+            foreach (Pawn pawn in map.mapPawns.AllPawns)
+            {
+                if (pawn != null && !pawn.Dead && pawn.Downed && pawn.RaceProps.Humanlike && pawn.IsFreeNonSlaveColonist)
+                {
+                    result.Add(pawn);
+                }
+            }
+            return result;
+        }
+
+        private static List<Pawn> EnslaveDownedColonists(List<Pawn> pawnsToEnslave)
+        {
+            List<Pawn> enslaved = new List<Pawn>();
+            foreach (Pawn pawn in pawnsToEnslave)
+            {
+                if (pawn == null || pawn.Dead || !pawn.Downed || !pawn.IsFreeNonSlaveColonist)
+                {
+                    continue;
+                }
+                pawn.guest.SetGuestStatus(Faction.OfPlayer, GuestStatus.Slave);
+                enslaved.Add(pawn);
+            }
+            return enslaved;
         }
 
         private void OpenColonyNamingDialog()
@@ -201,14 +235,20 @@ namespace Raiders_Inherit
             }
         }
 
-        private static void SendJoinedLetter(RaidRecord record, List<Pawn> joiners, List<Pawn> allies)
+        private static void SendJoinedLetter(RaidRecord record, List<Pawn> joiners, List<Pawn> allies, List<Pawn> enslaved)
         {
             TaggedString label = "RaidersInherit.JoinedLetterLabel".Translate();
             TaggedString joinerNames = joiners.Select((Pawn p) => p.LabelShort).ToCommaList(useAnd: true);
             TaggedString factionName = record.faction?.Name ?? "RaidersInherit.UnknownFaction".Translate();
             string textKey = allies.Count == 0 ? "RaidersInherit.JoinedLetterTextAllJoined" : "RaidersInherit.JoinedLetterText";
             TaggedString text = textKey.Translate(joiners.Count, factionName, joinerNames, allies.Count);
-            Find.LetterStack.ReceiveLetter(label, text, LetterDefOf.PositiveEvent, new LookTargets(joiners));
+            if (enslaved.Count > 0)
+            {
+                TaggedString enslavedNames = enslaved.Select((Pawn p) => p.LabelShort).ToCommaList(useAnd: true);
+                text += "\n\n" + "RaidersInherit.EnslavedLetterAddendum".Translate(enslaved.Count, enslavedNames);
+            }
+            List<Pawn> lookTargets = joiners.Concat(enslaved).ToList();
+            Find.LetterStack.ReceiveLetter(label, text, LetterDefOf.PositiveEvent, new LookTargets(lookTargets));
         }
 
         private List<Pawn> GetLiveSpawnedPawns(RaidRecord record)

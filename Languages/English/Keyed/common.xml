@@ -12,4 +12,7 @@
     <RaidersInherit.JoinedLetterLabel>Raiders Take Over</RaidersInherit.JoinedLetterLabel>
     <RaidersInherit.JoinedLetterText>With your colony defeated, {0} raiders from {1} have decided to take over the colony: {2}.\n\nThe remaining {3} raiders have been released as non-hostile wanderers and are leaving the area. They will not attack the colony's new inhabitants.</RaidersInherit.JoinedLetterText>
     <RaidersInherit.JoinedLetterTextAllJoined>With your colony defeated, the entire attacking raid from {1} has decided to take over the colony: {2}.\n\nNone of the attackers remain hostile.</RaidersInherit.JoinedLetterTextAllJoined>
+    <RaidersInherit.EnslaveDownedColonists.Label>Enslave downed colonists on takeover</RaidersInherit.EnslaveDownedColonists.Label>
+    <RaidersInherit.EnslaveDownedColonists.Tooltip>If enabled, when a qualifying raid takes over your colony, any of your former colonists who were downed become player slaves after the raiders join. Requires the Ideology DLC.</RaidersInherit.EnslaveDownedColonists.Tooltip>
+    <RaidersInherit.EnslavedLetterAddendum>{0} of the colony's former defenders were left too injured to resist and have been enslaved: {1}.</RaidersInherit.EnslavedLetterAddendum>
 </LanguageData>

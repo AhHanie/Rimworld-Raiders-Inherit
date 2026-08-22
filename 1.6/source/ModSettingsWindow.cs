@@ -43,6 +43,14 @@ namespace Raiders_Inherit
 
             listing.Label("RaidersInherit.RaidersToInherit.Tooltip".Translate());
 
+            listing.Gap();
+
+            GUI.enabled = ModsConfig.IdeologyActive;
+            string enslaveLabel = "RaidersInherit.EnslaveDownedColonists.Label".Translate();
+            TaggedString enslaveTooltip = "RaidersInherit.EnslaveDownedColonists.Tooltip".Translate();
+            listing.CheckboxLabeled(enslaveLabel, ref ModSettings.enslaveDownedColonistsOnTakeover, enslaveTooltip);
+            GUI.enabled = true;
+
             listing.End();
         }
     }
