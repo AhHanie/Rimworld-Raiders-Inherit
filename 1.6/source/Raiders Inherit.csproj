@@ -71,6 +71,7 @@
     <Compile Include="ModSettingsWindow.cs" />
     <Compile Include="RaidRecord.cs" />
     <Compile Include="RaidInheritanceMapComponent.cs" />
+    <Compile Include="RaidersInheritJobDefOf.cs" />
     <Compile Include="Patches\RaidStrategyWorker_TryGenerateRaidInfo_Patch.cs" />
     <Compile Include="Patches\PawnHealthTracker_MakeDowned_Patch.cs" />
     <Compile Include="Patches\Pawn_Kill_Patch.cs" />

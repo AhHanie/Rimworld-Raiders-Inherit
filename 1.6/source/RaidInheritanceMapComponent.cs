@@ -60,6 +60,7 @@ namespace Raiders_Inherit
                 return;
             }
             record.pending = true;
+            record.finishDownedColonistsBeforeHandoff = ModSettings.finishDownedColonistsBeforeTakeover;
         }
 
         private RaidRecord FindMostRecentOngoingRaid()
@@ -113,7 +114,18 @@ namespace Raiders_Inherit
             if (!NoViableColonistRemains(null))
             {
                 record.pending = false;
+                record.finishDownedColonistsBeforeHandoff = false;
                 return;
+            }
+            if (record.finishDownedColonistsBeforeHandoff)
+            {
+                List<Pawn> executionTargets = GetDownedColonistsToExecute();
+                if (executionTargets.Count > 0)
+                {
+                    AdvanceExecutionPhase(record, executionTargets);
+                    return;
+                }
+                record.finishDownedColonistsBeforeHandoff = false;
             }
             if (AnyPawnStillArriving(record))
             {
@@ -126,6 +138,35 @@ namespace Raiders_Inherit
                 return;
             }
             PerformHandoff(record, livePawns);
+        }
+
+        private void AdvanceExecutionPhase(RaidRecord record, List<Pawn> targets)
+        {
+            if (GetLiveSpawnedPawns(record).Count == 0 && !AnyPawnStillArriving(record))
+            {
+                records.Remove(record);
+                return;
+            }
+            AssignExecutionJobs(record, targets);
+            bool anyExecuting = GetConsciousSpawnedRaiders(record).Any((Pawn r) => IsExecutingDownedColonist(r, targets));
+            if (!anyExecuting)
+            {
+                WarnWaitingOnUnreachableTargets(record);
+            }
+            else
+            {
+                record.warnedUnreachableExecution = false;
+            }
+        }
+
+        private static void WarnWaitingOnUnreachableTargets(RaidRecord record)
+        {
+            if (record.warnedUnreachableExecution)
+            {
+                return;
+            }
+            record.warnedUnreachableExecution = true;
+            Logger.Warning("Raid from " + (record.faction?.Name ?? "an unknown faction") + " is waiting to hand off because no conscious raider can currently reach a downed colonist to execute.");
         }
 
         private static bool IsRaidOver(RaidRecord record)
@@ -201,15 +242,102 @@ namespace Raiders_Inherit
             {
                 return new List<Pawn>();
             }
+            return GetEligibleDownedFormerColonists();
+        }
+
+        private List<Pawn> GetDownedColonistsToExecute()
+        {
+            return GetEligibleDownedFormerColonists();
+        }
+
+        private List<Pawn> GetEligibleDownedFormerColonists()
+        {
             List<Pawn> result = new List<Pawn>();
             foreach (Pawn pawn in map.mapPawns.AllPawns)
             {
-                if (pawn != null && !pawn.Dead && pawn.Downed && pawn.RaceProps.Humanlike && pawn.IsFreeNonSlaveColonist)
+                if (IsEligibleDownedFormerColonist(pawn))
                 {
                     result.Add(pawn);
                 }
             }
             return result;
+        }
+
+        private static bool IsEligibleDownedFormerColonist(Pawn pawn)
+        {
+            return pawn != null && pawn.Spawned && !pawn.Dead && pawn.Downed && pawn.RaceProps.Humanlike && pawn.IsFreeNonSlaveColonist;
+        }
+
+        private static List<Pawn> GetConsciousSpawnedRaiders(RaidRecord record)
+        {
+            List<Pawn> result = new List<Pawn>();
+            foreach (Pawn pawn in record.raidPawns)
+            {
+                if (pawn != null && pawn.Spawned && !pawn.Dead && !pawn.Downed && pawn.Faction == record.faction)
+                {
+                    result.Add(pawn);
+                }
+            }
+            return result;
+        }
+
+        private static bool IsExecutingDownedColonist(Pawn raider, List<Pawn> targets)
+        {
+            Job job = raider.CurJob;
+            if (job == null || job.def != RaidersInheritJobDefOf.RaidersInherit_ExecuteDowned || !job.killIncappedTarget)
+            {
+                return false;
+            }
+            Pawn target = job.GetTarget(TargetIndex.A).Thing as Pawn;
+            return target != null && targets.Contains(target);
+        }
+
+        private void AssignExecutionJobs(RaidRecord record, List<Pawn> targets)
+        {
+            foreach (Pawn raider in GetConsciousSpawnedRaiders(record))
+            {
+                if (IsExecutingDownedColonist(raider, targets))
+                {
+                    continue;
+                }
+                Pawn target = FindExecutionTarget(raider, targets);
+                if (target == null)
+                {
+                    continue;
+                }
+                Job job = JobMaker.MakeJob(RaidersInheritJobDefOf.RaidersInherit_ExecuteDowned, target);
+                job.killIncappedTarget = true;
+                job.attackDoorIfTargetLost = true;
+                raider.jobs.StartJob(job, JobCondition.InterruptForced);
+            }
+        }
+
+        private static Pawn FindExecutionTarget(Pawn raider, List<Pawn> targets)
+        {
+            Pawn best = null;
+            int bestDistSq = int.MaxValue;
+            foreach (Pawn target in targets)
+            {
+                if (raider.meleeVerbs?.TryGetMeleeVerb(target) == null)
+                {
+                    continue;
+                }
+                if (!raider.Map.attackTargetReservationManager.CanReserve(raider, target))
+                {
+                    continue;
+                }
+                if (!raider.CanReach(target, PathEndMode.Touch, Danger.Deadly))
+                {
+                    continue;
+                }
+                int distSq = (target.Position - raider.Position).LengthHorizontalSquared;
+                if (distSq < bestDistSq)
+                {
+                    bestDistSq = distSq;
+                    best = target;
+                }
+            }
+            return best;
         }
 
         private static List<Pawn> EnslaveDownedColonists(List<Pawn> pawnsToEnslave)

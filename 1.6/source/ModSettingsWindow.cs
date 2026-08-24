@@ -45,6 +45,12 @@ namespace Raiders_Inherit
 
             listing.Gap();
 
+            string finishDownedLabel = "RaidersInherit.FinishDownedColonistsBeforeTakeover.Label".Translate();
+            TaggedString finishDownedTooltip = "RaidersInherit.FinishDownedColonistsBeforeTakeover.Tooltip".Translate();
+            listing.CheckboxLabeled(finishDownedLabel, ref ModSettings.finishDownedColonistsBeforeTakeover, finishDownedTooltip);
+
+            listing.Gap();
+
             GUI.enabled = ModsConfig.IdeologyActive;
             string enslaveLabel = "RaidersInherit.EnslaveDownedColonists.Label".Translate();
             TaggedString enslaveTooltip = "RaidersInherit.EnslaveDownedColonists.Tooltip".Translate();
