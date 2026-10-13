@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <JobDef>
+    <defName>RaidersInherit_ExecuteDowned</defName>
+    <driverClass>Verse.AI.JobDriver_AttackMelee</driverClass>
+    <reportString>Executing downed colonist.</reportString>
+    <alwaysShowWeapon>true</alwaysShowWeapon>
+    <neverFleeFromEnemies>true</neverFleeFromEnemies>
+  </JobDef>
+</Defs>
